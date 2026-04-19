@@ -119,6 +119,8 @@ h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3.5rem);font-we
 .star{font-size:.8rem}
 .star.on{color:var(--gold)}
 .star.off{color:rgba(212,175,55,.18)}
+.star.half{position:relative;display:inline-block;color:rgba(212,175,55,.18)}
+.star.half .hfg{position:absolute;left:0;top:0;width:50%;overflow:hidden;color:var(--gold);display:block}
 /* review */
 .rev{font-size:.68rem;color:var(--mu);font-style:italic;line-height:1.5;margin-bottom:.5rem;border-left:2px solid var(--gd);padding-left:.55rem}
 /* prices */
@@ -221,35 +223,42 @@ const DATA = [
     brand:"Racing Club", name:"Red", type:"EDT", size:"3.4 oz",
     paid:5, msrp:18, rating:3,
     review:"Smells decent for $5. Wouldn't wear it out but fine at home.",
-    img:null, badge:{l:"Budget Find",c:"b-budget"}, special:null,
+    img:"https://i.imgur.com/NtCIhsK.jpeg", badge:{l:"Budget Find",c:"b-budget"}, special:null,
     color:"#c0392b", grad:"rgba(192,57,43,.28),rgba(0,0,0,.55)"
   },
   {
     brand:"Racing Club", name:"Blue", type:"EDT", size:"3.4 oz",
     paid:5, msrp:18, rating:3,
     review:"Aquatic, light, totally inoffensive. Dollar-per-wear is unbeatable.",
-    img:null, badge:{l:"Budget Find",c:"b-budget"}, special:null,
+    img:"https://i.imgur.com/6zzbPJO.jpeg", badge:{l:"Budget Find",c:"b-budget"}, special:null,
     color:"#2980b9", grad:"rgba(41,128,185,.28),rgba(0,0,0,.55)"
   },
   {
     brand:"Racing Club", name:"Black", type:"EDT", size:"3.4 oz",
     paid:5, msrp:18, rating:2,
     review:"Tries to be dark and broody. Falls flat after about an hour.",
-    img:null, badge:{l:"Budget Find",c:"b-budget"}, special:null,
+    img:"https://i.imgur.com/oAtKDMl.jpeg", badge:{l:"Budget Find",c:"b-budget"}, special:null,
     color:"#8e9eab", grad:"rgba(55,60,80,.45),rgba(0,0,0,.6)"
   },
   {
     brand:"Le Grande", name:"White", type:"EDT", size:"3.4 oz",
-    paid:5, msrp:18, rating:3,
-    review:"Clean and fresh. Better than expected for the price point.",
-    img:null, badge:{l:"Budget Find",c:"b-budget"}, special:null,
+    paid:5, msrp:18, rating:2.5,
+    review:"Clean and fresh. Fine for the price but nothing memorable.",
+    img:"https://i.imgur.com/6qBrtev.jpeg", badge:{l:"Budget Find",c:"b-budget"}, special:null,
     color:"#c8d3da", grad:"rgba(190,200,210,.15),rgba(0,0,0,.55)"
   },
   {
-    brand:"Family Dollar", name:"The Disasters (×2)", type:"Other", size:"Unknown",
-    paid:8, msrp:10, rating:1,
-    review:"Names forgotten on purpose. Both were an assault on the senses. Never again.",
-    img:null, badge:{l:"🚫 Avoid",c:"b-regret"}, special:"disaster",
+    brand:"Family Dollar", name:"Scentfull Gold Dust", type:"Body Mist", size:"3.7 oz",
+    paid:3.40, msrp:8, rating:1,
+    review:"Not even a cologne. A body mist. From Family Dollar. What was I thinking.",
+    img:"https://i.imgur.com/fUxA4Yc.jpeg", badge:{l:"🚫 Avoid",c:"b-regret"}, special:"disaster",
+    color:"#ef4444", grad:"rgba(239,68,68,.2),rgba(60,0,0,.7)"
+  },
+  {
+    brand:"Family Dollar", name:"Cherry Rebel", type:"Body Spray", size:"Unknown",
+    paid:3.99, msrp:8, rating:1,
+    review:"Smelled like a gas station air freshener. The name was the best thing about it.",
+    img:"https://i.imgur.com/jsXuAq2.jpeg", badge:{l:"🚫 Avoid",c:"b-regret"}, special:"disaster",
     color:"#ef4444", grad:"rgba(239,68,68,.2),rgba(60,0,0,.7)"
   },
 
@@ -258,63 +267,63 @@ const DATA = [
     brand:"Jimmy Choo", name:"Man Blue", type:"EDT", size:"Standard",
     paid:52, msrp:75, rating:4,
     review:"Great summer fragrance. Light, citrusy, crowd-pleasing. Solid buy.",
-    img:null, badge:null, special:null,
+    img:"https://i.imgur.com/x60mN12.jpeg", badge:null, special:null,
     color:"#2471a3", grad:"rgba(36,113,163,.28),rgba(0,0,0,.52)"
   },
   {
     brand:"Mahajan", name:"Desperado (Original)", type:"EDP", size:"Standard",
     paid:54, msrp:80, rating:4,
     review:"Unique and bold. Gets compliments. Worth every dollar.",
-    img:null, badge:null, special:null,
+    img:"https://i.imgur.com/Lf83HzB.jpeg", badge:null, special:null,
     color:"#884ea0", grad:"rgba(136,78,160,.28),rgba(0,0,0,.52)"
   },
   {
     brand:"Generic / Niche", name:"Exotic Amber", type:"EDP", size:"Standard",
-    paid:30, msrp:45, rating:3,
+    paid:30, msrp:45, rating:3.5,
     review:"Warm amber base, nice longevity. A bit generic but pleasant.",
-    img:null, badge:null, special:null,
+    img:"https://i.imgur.com/KaaX8pe.png", badge:null, special:null,
     color:"#d35400", grad:"rgba(211,84,0,.28),rgba(0,0,0,.52)"
   },
   {
     brand:"Rue Broca", name:"Exotic Heritage", type:"EDP", size:"Standard",
-    paid:25, msrp:35, rating:4,
-    review:"Surprisingly complex for the price. Oriental warmth done right.",
-    img:null, badge:null, special:null,
+    paid:25, msrp:35, rating:5,
+    review:"My football teammates used to BEG me to wear this after practice. Undeniable. No debate.",
+    img:"https://i.imgur.com/yLlW7UF.jpeg", badge:null, special:null,
     color:"#a04000", grad:"rgba(160,64,0,.28),rgba(0,0,0,.52)"
   },
   {
     brand:"Jean Paul Gaultier", name:"Le Male Elixir Absolu", type:"EDP", size:"6.8 oz",
     paid:35, msrp:175, rating:5,
     review:"The crown jewel. Heavy, seductive, beast-mode longevity. $35 for this is criminal.",
-    img:null, badge:{l:"💎 Hookup Deal",c:"b-hookup"}, special:null,
+    img:"https://i.imgur.com/EtMOD1y.jpeg", badge:{l:"💎 Hookup Deal",c:"b-hookup"}, special:null,
     color:"#c9a84c", grad:"rgba(15,20,60,.7),rgba(201,168,76,.22)"
   },
   {
     brand:"Afnan", name:"9 PM Elixir", type:"EDP", size:"Standard",
     paid:35, msrp:55, rating:4,
     review:"Dark, sweet, smoky. Perfect for nights out. Excellent value.",
-    img:null, badge:null, special:null,
+    img:"https://i.imgur.com/hUwWxhj.png", badge:null, special:null,
     color:"#6c5ce7", grad:"rgba(40,30,80,.5),rgba(108,92,231,.2)"
   },
   {
     brand:"Lattafa", name:"Asad Bourbon", type:"EDP", size:"Standard",
     paid:51, msrp:60, rating:3,
     review:"Smells like expensive whiskey on skin. Nice, but not $51 nice. Felt burned.",
-    img:null, badge:{l:"😤 Felt Scammed",c:"b-scam"}, special:null,
+    img:"https://i.imgur.com/dbCK9Ps.jpeg", badge:{l:"😤 Felt Scammed",c:"b-scam"}, special:null,
     color:"#784212", grad:"rgba(120,66,18,.38),rgba(0,0,0,.52)"
   },
   {
     brand:"Lattafa", name:"Layali Rouge", type:"EDP", size:"Travel Mini",
     paid:10, msrp:22, rating:4,
     review:"Rich, rosy, and sweet. The travel size goes a long way. Absolute steal.",
-    img:null, badge:{l:"🔥 Steal",c:"b-steal"}, special:null,
+    img:"https://i.imgur.com/2ubU8so.jpeg", badge:{l:"🔥 Steal",c:"b-steal"}, special:null,
     color:"#c0392b", grad:"rgba(192,57,43,.25),rgba(0,0,0,.52)"
   },
   {
     brand:"Creed", name:"Aventus Refill", type:"EDP", size:"10 ml",
-    paid:10, msrp:50, rating:5,
-    review:"It's Creed Aventus. Pineapple, birch, smoke — the GOAT of modern frags. $10.",
-    img:null, badge:{l:"🔥 Steal",c:"b-steal"}, special:null,
+    paid:10, msrp:50, rating:4.5,
+    review:"Overhyped going in — but at $10 it earned its place. The birch smoke and pineapple are real.",
+    img:"https://i.imgur.com/iuT5ghj.jpeg", badge:{l:"🔥 Steal",c:"b-steal"}, special:null,
     color:"#1e8449", grad:"rgba(30,132,73,.28),rgba(0,0,0,.52)"
   },
 
@@ -342,7 +351,11 @@ function savBadge(paid,msrp){
 function stars(n){
   if(!n)return'';
   let h='<div class="stars">';
-  for(let i=1;i<=5;i++)h+=`<span class="star ${i<=n?'on':'off'}">★</span>`;
+  for(let i=1;i<=5;i++){
+    if(n>=i)          h+=`<span class="star on">★</span>`;
+    else if(n>=i-.5)  h+=`<span class="star half">★<span class="hfg">★</span></span>`;
+    else              h+=`<span class="star off">★</span>`;
+  }
   return h+'</div>';
 }
 function bottleSVG(col){
