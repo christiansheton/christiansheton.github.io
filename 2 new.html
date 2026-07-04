@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wall of Colognes | Shetonde's Collection</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Outfit:wght@400;500;700&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  /* Space Theme Palette */
+  --star-white: #f8fafc;
+  --nebula-blue: #38bdf8;
+  --nebula-dark: #0369a1;
+  --deep-space: #020617;
+  --void: #000000;
+  
+  --gl: #e2e8f0;
+  --gd: rgba(56, 189, 248, 0.15);
+  --gb: rgba(56, 189, 248, 0.08);
+  --fg: #f1f5f9;
+  --mu: #64748b;
+  --bg: var(--void);
+  --bg2: var(--deep-space);
+  --card-bg: rgba(15, 23, 42, 0.4);
+}
+
+html{scroll-behavior:smooth}
+
+body{
+  background:var(--bg);
+  color:var(--fg);
+  font-family:'Inter',sans-serif;
+  min-height:100vh;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ── STARLIGHT TEXT ── */
+.starlight-text {
+  background: linear-gradient(180deg, #ffffff 0%, #94a3b8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ── PARTICLE CANVAS ── */
+#particleCanvas{
+  position:fixed;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  opacity:0.85;
+}
+
+/* ── CUSTOM CURSOR ── */
+.cursor-dot,.cursor-ring{
+  position:fixed;
+  top:0;left:0;
+  pointer-events:none;
+  z-index:9999;
+  border-radius:50%;
+  transform:translate(-50%,-50%);
+  transition:opacity 0.3s;
+}
+.cursor-dot{
+  width:4px;height:4px;
+  background:var(--star-white);
+  box-shadow: 0 0 10px var(--star-white), 0 0 20px var(--nebula-blue);
+}
+.cursor-ring{
+  width:40px;height:40px;
+  border:1px solid rgba(56, 189, 248, 0.3);
+  transition:width 0.25s,height 0.25s,border-color 0.25s, background 0.25s;
+}
+body:hover .cursor-ring.hovered{
+  width:60px;height:60px;
+  border-color:var(--star-white);
+  background:rgba(56, 189, 248, 0.05);
+}
+@media(pointer:coarse){
+  .cursor-dot,.cursor-ring{display:none}
+}
+
+/* ── HERO ── */
+.hero{
+  position:relative;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:2rem;
+  overflow:hidden;
+}
+.hero-bg{
+  position:absolute;
+  inset:0;
+  z-index:0;
+  background:
+    radial-gradient(ellipse 60% 60% at 50% 30%, rgba(56, 189, 248, 0.04) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 40% at 20% 60%, rgba(3, 105, 161, 0.05) 0%, transparent 60%);
+}
+.hero-fog{
+  position:absolute;
+  inset:0;
+  z-index:0;
+  background:url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity:0.02;
+  mix-blend-mode:overlay;
+}
+.hero-vignette{
+  position:absolute;
+  inset:0;
+  z-index:1;
+  background:radial-gradient(ellipse 80% 80% at 50% 50%, transparent 20%, var(--bg) 100%);
+}
+.hero-content{
+  position:relative;
+  z-index:2;
+  max-width:800px;
+}
+.hero-eyebrow{
+  font-family:'Outfit',sans-serif;
+  font-size:0.75rem;
+  letter-spacing:0.4em;
+  text-transform:uppercase;
+  color:var(--mu);
+  margin-bottom:1.5rem;
+  opacity:0;
+  font-weight:500;
+}
+.hero-title{
+  font-family:'Outfit',sans-serif;
+  font-size:clamp(3.5rem,8vw,7.5rem);
+  font-weight:700;
+  line-height:1;
+  letter-spacing:-0.02em;
+  margin-bottom:1.5rem;
+  opacity:0;
+  color: #fff;
+}
+.hero-title .elegant{
+  font-family:'Playfair Display',serif;
+  font-weight:500;
+  font-style:italic;
+  letter-spacing:0;
+}
+.hero-rule{
+  width:80px;
+  height:1px;
+  background:linear-gradient(90deg, transparent, var(--mu), transparent);
+  margin:0 auto 1.5rem;
+  opacity:0;
+}
+.hero-sub{
+  font-family:'Inter',sans-serif;
+  font-size:clamp(0.85rem,1.5vw,1.1rem);
+  color:var(--mu);
+  font-weight:300;
+  line-height:1.8;
+  max-width:520px;
+  margin:0 auto 3rem;
+  opacity:0;
+}
+.hero-scroll{
+  position:absolute;
+  bottom:2.5rem;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:2;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:0.75rem;
+  opacity:0;
+  cursor:pointer;
+  transition:opacity 0.3s;
+}
+.hero-scroll:hover{opacity:0.7!important}
+.hero-scroll span{
+  font-family:'Outfit',sans-serif;
+  font-size:0.6rem;
+  letter-spacing:0.3em;
+  text-transform:uppercase;
+  color:var(--mu);
+  font-weight:500;
+}
+.hero-scroll-line{
+  width:1px;
+  height:50px;
+  background:linear-gradient(transparent,var(--nebula-blue));
+  animation:scrollPulse 2.5s ease-in-out infinite;
+}
+@keyframes scrollPulse{
+  0%,100%{opacity:0.2;transform:scaleY(1)}
+  50%{opacity:0.8;transform:scaleY(1.15)}
+}
+
+/* ── STATS ── */
+.stats-section{position:relative;z-index:2;padding:0 1rem 4rem;}
+.stats-bar{
+  display:flex;justify-content:center;max-width:700px;margin:0 auto;
+  background:rgba(15, 23, 42, 0.4);
+  border:1px solid var(--gb);border-radius:24px;backdrop-filter:blur(20px);
+  overflow:hidden;flex-wrap:wrap;padding:0.3rem;
+}
+.stat{flex:1;min-width:140px;text-align:center;padding:1.2rem 1rem;position:relative;opacity:0;transform:translateY(20px);}
+.stat+.stat::before{content:'';position:absolute;left:0;top:25%;bottom:25%;width:1px;background:var(--gb);}
+.stat-value{font-family:'Outfit',sans-serif;font-size:2.2rem;font-weight:700;color:var(--star-white);line-height:1;}
+.stat-value.green{color:var(--nebula-blue)}
+.stat-label{font-family:'Inter',sans-serif;font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--mu);margin-top:0.4rem;font-weight:500;}
+
+/* ── SECTION DIVIDER ── */
+.section-divider{display:flex;align-items:center;justify-content:center;gap:1.5rem;padding:2rem 1rem;position:relative;z-index:2;}
+.section-divider .line{width:80px;height:1px;background:linear-gradient(90deg,transparent,rgba(56, 189, 248, 0.3),transparent);}
+.section-divider .diamond{width:4px;height:4px;background:var(--nebula-blue);transform:rotate(45deg);opacity:0.8;box-shadow:0 0 10px var(--nebula-blue);}
+
+/* ── COLLECTION HEADER ── */
+.collection-header{text-align:center;padding:2rem 1rem 3rem;position:relative;z-index:2;}
+.collection-header h2{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-style:italic;font-weight:500;color:var(--fg);margin-bottom:0.75rem;}
+.collection-header p{font-family:'Outfit',sans-serif;font-size:0.85rem;color:var(--mu);font-weight:400;letter-spacing:0.05em;}
+
+/* ── FILTER BAR ── */
+.filter-bar{
+  position:sticky;top:1rem;z-index:100;display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;
+  max-width:1100px;margin:0 auto 2.5rem;padding:0.8rem 1.5rem;
+  background:rgba(2, 6, 23, 0.85);
+  backdrop-filter:blur(24px);border:1px solid var(--gb);border-radius:16px;
+  transition:box-shadow 0.3s;
+}
+.filter-bar.scrolled{box-shadow:0 8px 32px rgba(0,0,0,0.8),0 0 20px rgba(56, 189, 248, 0.05);}
+.filter-label{font-family:'Outfit',sans-serif;font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--mu);white-space:nowrap;font-weight:500;}
+.filter-pills{display:flex;gap:0.4rem;flex-wrap:wrap;}
+.pill-btn{
+  font-family:'Outfit',sans-serif;font-size:0.65rem;font-weight:500;letter-spacing:0.05em;
+  padding:0.4rem 0.9rem;border-radius:8px;border:1px solid var(--gb);background:transparent;
+  color:var(--mu);cursor:pointer;transition:all 0.3s;text-transform:uppercase;
+}
+.pill-btn:hover{border-color:rgba(56, 189, 248, 0.5);color:var(--gl);background:rgba(56, 189, 248, 0.05);}
+.pill-btn.on{
+  background:rgba(56, 189, 248, 0.1);
+  border-color:var(--nebula-blue);color:var(--star-white);
+  box-shadow:0 0 15px rgba(56, 189, 248, 0.15);
+}
+.filter-sep{width:1px;height:20px;background:var(--gb);flex-shrink:0;}
+.filter-sort{
+  font-family:'Outfit',sans-serif;font-size:0.65rem;font-weight:500;letter-spacing:0.05em;
+  padding:0.4rem 0.9rem;border-radius:8px;border:1px solid var(--gb);background:rgba(2, 6, 23, 0.8);
+  color:var(--mu);cursor:pointer;outline:none;transition:all 0.3s;appearance:none;
+  padding-right:2rem;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 0.6rem center;
+}
+.filter-sort:focus{border-color:var(--nebula-blue);color:var(--gl);}
+.filter-count{margin-left:auto;font-family:'Outfit',sans-serif;font-size:0.65rem;color:var(--mu);letter-spacing:0.05em;font-weight:500;}
+.search-box{
+  display:flex;align-items:center;gap:0.5rem;padding:0.4rem 0.9rem;border-radius:8px;
+  border:1px solid var(--gb);background:rgba(2, 6, 23, 0.6);transition:all 0.3s;min-width:180px;
+}
+.search-box:focus-within{border-color:var(--nebula-blue);box-shadow:0 0 12px rgba(56, 189, 248, 0.1);}
+.search-box svg{flex-shrink:0;opacity:0.5;stroke:var(--mu);}
+.search-box input{background:transparent;border:none;outline:none;color:var(--fg);font-family:'Inter',sans-serif;font-size:0.7rem;width:100%;}
+.search-box input::placeholder{color:var(--mu);opacity:0.6}
+
+/* ── GRID ── */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem;max-width:1200px;margin:0 auto;padding:0 1.5rem;position:relative;z-index:2;perspective:1200px;}
+.grid:has(.none){grid-template-columns:1fr}
+.none{grid-column:1/-1;text-align:center;padding:5rem 2rem;color:var(--mu);font-family:'Outfit',sans-serif;font-size:1rem;}
+
+/* ── CARD ── */
+.card{
+  background:var(--card-bg);border:1px solid var(--gb);border-radius:12px;
+  backdrop-filter:blur(14px);overflow:hidden;
+  transition:transform 0.5s cubic-bezier(0.34,1.4,0.64,1),box-shadow 0.5s ease, border-color 0.3s;
+  position:relative;cursor:pointer;opacity:0;transform:translateY(40px) rotateX(5deg);transform-style:preserve-3d;
+}
+.card.visible{opacity:1;transform:translateY(0) rotateX(0);}
+.card:hover{
+  transform:translateY(-8px) scale(1.015);
+  box-shadow:0 32px 70px rgba(0,0,0,0.9),0 0 30px rgba(56, 189, 248, 0.08);
+  border-color:rgba(56, 189, 248, 0.4);
+}
+
+/* ── BOTTLE / IMAGE ── */
+.card-image{height:200px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.card-image .bw{display:flex;align-items:center;justify-content:center;width:100%;height:100%;}
+.card-image img{width:100%;height:100%;object-fit:cover;object-position:center top;transition:transform 0.7s cubic-bezier(0.4,0,0.2,1),filter 0.5s ease;filter:brightness(0.85) contrast(1.1) grayscale(0.2);}
+.card:hover .card-image img{transform:scale(1.1);filter:brightness(1) contrast(1.1) grayscale(0);}
+.card-image::after{content:'';position:absolute;bottom:0;left:0;right:0;height:60px;background:linear-gradient(transparent,var(--deep-space));pointer-events:none;z-index:1;}
+.btl{transition:transform 0.5s cubic-bezier(0.34,1.56,0.64,1),filter 0.4s ease;filter:drop-shadow(0 0 16px var(--bcol));}
+.card:hover .btl{transform:scale(1.18) translateY(-4px);filter:drop-shadow(0 0 32px var(--bcol)) drop-shadow(0 0 14px var(--bcol));}
+
+/* ── BADGE ── */
+.card-badge{position:absolute;top:12px;right:12px;font-family:'Outfit',sans-serif;font-size:0.6rem;padding:0.3rem 0.7rem;border-radius:4px;font-weight:500;letter-spacing:0.05em;z-index:4;white-space:nowrap;backdrop-filter:blur(8px); border: 1px solid;}
+.b-steal{background:rgba(52, 211, 153, 0.1);color:#34d399;border-color:rgba(52, 211, 153, 0.3)}
+.b-regret{background:rgba(248, 113, 113, 0.1);color:#f87171;border-color:rgba(248, 113, 113, 0.3)}
+.b-scam{background:rgba(248, 113, 113, 0.1);color:#f87171;border-color:rgba(248, 113, 113, 0.3)}
+.b-hookup{background:rgba(167, 139, 250, 0.1);color:#a78bfa;border-color:rgba(167, 139, 250, 0.3)}
+.b-budget{background:rgba(148, 163, 184, 0.1);color:#94a3b8;border-color:rgba(148, 163, 184, 0.3)}
+
+/* ── DISASTER CARD ── */
+@keyframes disasterFlicker{
+  0%,78%,84%,90%,96%,100%{opacity:1;border-color:rgba(248, 113, 113, 0.2);filter:brightness(1)}
+  79%{opacity:0.4;border-color:rgba(248, 113, 113, 0.8);filter:brightness(1.5) saturate(1.5)}
+  80%{opacity:0.9;border-color:rgba(248, 113, 113, 0.2);filter:brightness(0.9)}
+  81%{opacity:0.3;border-color:rgba(248, 113, 113, 0.8);filter:brightness(1.6)}
+  82%{opacity:1;border-color:rgba(248, 113, 113, 0.2);filter:brightness(1)}
+}
+.card.disaster{animation:disasterFlicker 7s infinite;border-color:rgba(248, 113, 113, 0.2)!important;}
+.card.disaster:hover{transform:translateY(-4px) rotate(0.5deg) scale(1.01);box-shadow:0 20px 50px rgba(248, 113, 113, 0.15)!important;}
+.crack{position:absolute;inset:0;z-index:3;pointer-events:none}
+@keyframes crackFlash{0%,78%,100%{opacity:0.5}79%{opacity:0.95}80%{opacity:0.25}82%{opacity:0.85}}
+.crack{animation:crackFlash 7s infinite}
+
+/* ── CARD BODY ── */
+.card-body{padding:1.2rem 1.3rem 1.3rem;position:relative;z-index:2;}
+.card-brand{font-family:'Outfit',sans-serif;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--mu);margin-bottom:0.4rem;font-weight:500;}
+.card-name{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:500;font-style:italic;line-height:1.2;margin-bottom:0.6rem;color:var(--star-white);}
+.card-meta{display:flex;gap:0.4rem;flex-wrap:wrap;margin-bottom:0.8rem;}
+.meta-pill{font-family:'Outfit',sans-serif;font-weight:500;font-size:0.55rem;letter-spacing:0.1em;padding:0.25rem 0.6rem;border-radius:4px;border:1px solid var(--gb);color:var(--mu);text-transform:uppercase;}
+.meta-pill.type{border-color:rgba(56, 189, 248, 0.3);color:var(--nebula-blue);background:rgba(56, 189, 248, 0.05);}
+
+/* ── STARS ── */
+.stars{display:flex;gap:3px;margin-bottom:0.8rem;}
+.star{font-size:0.9rem;transition:transform 0.2s;color:var(--mu);}
+.star.on{color:var(--star-white);}
+.star.off{color:rgba(255,255,255,0.1);}
+.star.half{position:relative;display:inline-block;color:rgba(255,255,255,0.1);}
+.star.half .hfg{position:absolute;left:0;top:0;width:50%;overflow:hidden;color:var(--star-white);display:block;}
+.card:hover .star{transform:scale(1.1);}
+
+/* ── REVIEW ── */
+.review{font-size:0.75rem;color:var(--mu);line-height:1.6;margin-bottom:0.8rem;border-left:1px solid var(--gb);padding-left:0.8rem;transition:border-color 0.3s;}
+.card:hover .review{border-color:var(--nebula-blue); color: #cbd5e1;}
+
+/* ── PRICES ── */
+.prices{display:flex;justify-content:space-between;align-items:center;padding-top:1rem;border-top:1px solid rgba(255,255,255,0.05);}
+.price-col{text-align:center}
+.price-label{font-family:'Outfit',sans-serif;font-size:0.55rem;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:var(--mu);margin-bottom:0.3rem;}
+.price-value{font-family:'Outfit',sans-serif;font-size:1.4rem;font-weight:500;color:var(--gl);}
+.price-msrp{font-family:'Outfit',sans-serif;font-size:0.9rem;font-weight:400;color:var(--mu);text-decoration:line-through;}
+.save-badge{font-family:'Outfit',sans-serif;font-size:0.55rem;font-weight:500;padding:0.3rem 0.6rem;border-radius:4px;letter-spacing:0.05em;white-space:nowrap; border: 1px solid;}
+.s-gr{background:rgba(52, 211, 153, 0.05);color:#34d399;border-color:rgba(52, 211, 153, 0.2)}
+.s-ok{background:rgba(56, 189, 248, 0.05);color:var(--nebula-blue);border-color:rgba(56, 189, 248, 0.2)}
+.s-ne{background:rgba(148, 163, 184, 0.05);color:#94a3b8;border-color:rgba(148, 163, 184, 0.2)}
+
+/* ── DETAIL MODAL ── */
+.modal-overlay{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0.9);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:2rem;opacity:0;pointer-events:none;transition:opacity 0.4s ease;}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal-content{background:var(--bg2);border:1px solid rgba(255,255,255,0.05);border-radius:12px;max-width:650px;width:100%;max-height:85vh;overflow-y:auto;position:relative;transform:scale(0.98) translateY(10px);transition:transform 0.4s cubic-bezier(0.34,1.4,0.64,1);box-shadow:0 40px 100px rgba(0,0,0,1);}
+.modal-overlay.open .modal-content{transform:scale(1) translateY(0);}
+.modal-close{position:absolute;top:1.2rem;right:1.2rem;width:32px;height:32px;border-radius:4px;border:1px solid var(--gb);background:rgba(255,255,255,0.02);color:var(--mu);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem;transition:all 0.3s;z-index:10;}
+.modal-close:hover{border-color:var(--star-white);color:var(--star-white);background:rgba(255,255,255,0.05);}
+.modal-image{height:280px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;border-radius:12px 12px 0 0;}
+.modal-image img{width:100%;height:100%;object-fit:cover;object-position:center top;filter:brightness(0.9) grayscale(0.1);}
+.modal-image .bw{display:flex;align-items:center;justify-content:center;width:100%;height:100%;}
+.modal-image::after{content:'';position:absolute;bottom:0;left:0;right:0;height:100px;background:linear-gradient(transparent,var(--bg2));pointer-events:none;z-index:1;}
+.modal-body{padding:2.5rem;}
+.modal-brand{font-family:'Outfit',sans-serif;font-size:0.7rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--mu);margin-bottom:0.5rem;}
+.modal-name{font-family:'Playfair Display',serif;font-size:2.5rem;font-style:italic;font-weight:500;line-height:1.1;margin-bottom:1.2rem;color:var(--star-white);}
+.modal-meta-row{display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1.2rem;}
+.modal-rating{margin-bottom:1.5rem;}
+.modal-review{font-size:0.95rem;color:var(--gl);line-height:1.8;margin-bottom:2rem;padding:1.5rem;background:rgba(255,255,255,0.02);border-radius:4px;border-left:2px solid var(--nebula-blue);}
+.modal-prices{display:flex;justify-content:space-around;padding:1.5rem;background:rgba(0,0,0,0.4);border-radius:8px;border:1px solid rgba(255,255,255,0.03);}
+.modal-price-col{text-align:center}
+.modal-price-label{font-family:'Outfit',sans-serif;font-size:0.6rem;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:var(--mu);margin-bottom:0.4rem;}
+.modal-price-value{font-family:'Outfit',sans-serif;font-size:2rem;font-weight:500;color:var(--gl);}
+.modal-price-msrp{font-family:'Outfit',sans-serif;font-size:1.2rem;font-weight:400;color:var(--mu);text-decoration:line-through;}
+.modal-special{margin-top:1.5rem;padding:1rem;border-radius:4px;font-family:'Outfit',sans-serif;font-weight:500;font-size:0.75rem;text-align:center;letter-spacing:0.1em;}
+.modal-special.disaster{background:rgba(248, 113, 113, 0.05);color:#f87171;border:1px solid rgba(248, 113, 113, 0.2);}
+
+/* ── ACCORDS ── */
+.main-accords { margin: 1.5rem 0; width: 100%; }
+.accord-bar { 
+  height: 24px; 
+  margin-bottom: 6px; 
+  border-radius: 12px; 
+  font-size: 11px; 
+  font-family: 'Inter', sans-serif; 
+  font-weight: bold; 
+  display: flex; 
+  align-items: center; 
+  padding-left: 12px; 
+  box-shadow: 1px 1px 4px rgba(0,0,0,0.2); 
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: transform 0.2s;
+}
+.accord-bar:hover { transform: translateX(5px); }
+
+/* ── COMMUNITY SECTION (GISCUS) ── */
+.comm-divider {display: flex;align-items: center;text-align: center;margin: 3rem 0 2rem;}
+.comm-divider::before, .comm-divider::after {content: ''; flex: 1; border-bottom: 1px solid rgba(255,255,255,0.05);}
+.comm-divider span {padding: 0 1.2rem;color: var(--mu);font-family:'Outfit',sans-serif;letter-spacing: 0.15em;font-size: 0.75rem;text-transform: uppercase;font-weight: 500;}
+.toggle-btn {
+  display: block;width: 100%;padding: 1.2rem;
+  background: transparent;border: 1px solid rgba(255,255,255,0.1);
+  color: var(--gl);border-radius: 4px;font-family: 'Outfit', sans-serif;
+  font-size: 0.85rem;font-weight: 500;letter-spacing: 0.1em;
+  cursor: pointer;text-transform: uppercase;transition: all 0.3s;
+}
+.toggle-btn:hover {
+  background: rgba(56, 189, 248, 0.05);
+  border-color: var(--nebula-blue);color: var(--star-white);box-shadow: 0 0 15px rgba(56, 189, 248, 0.1);
+}
+.giscus-wrapper {margin-top: 1.5rem;display: none;animation: fadeIn 0.4s ease;}
+@keyframes fadeIn {from {opacity: 0; transform: translateY(-10px);} to {opacity: 1; transform: translateY(0);}}
+
+/* ── FOOTER ── */
+footer{text-align:center;margin-top:6rem;padding:3rem 1rem;color:var(--mu);font-size:0.75rem;letter-spacing:0.05em;line-height:2;position:relative;z-index:2;}
+footer .name{color:var(--star-white);letter-spacing:0.1em;font-family:'Outfit',sans-serif;font-weight:500;}
+.footer-line{width:40px;height:1px;background:rgba(255,255,255,0.1);margin:0 auto 1.5rem;}
+
+/* ── SCROLL REVEAL ── */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity 0.8s cubic-bezier(0.4,0,0.2,1),transform 0.8s cubic-bezier(0.4,0,0.2,1);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  .grid{grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.2rem;padding:0 1rem}
+  .filter-bar{border-radius:12px;padding:0.7rem 1rem}
+  .stat{min-width:100px;padding:1rem 0.5rem}
+  .stat-value{font-size:1.8rem}
+  .card-image{height:180px}
+  .hero{min-height:90vh}
+  .modal-body{padding:1.5rem}
+}
+@media(max-width:480px){
+  .grid{grid-template-columns:1fr}
+  .stats-bar{border-radius:16px}
+  .stat{min-width:80px}
+  .filter-bar{top:0.5rem;border-radius:12px}
+  .modal-image{height:220px}
+}
+</style>
+</head>
+<body>
+
+<!-- Custom Cursor -->
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- Particle Canvas -->
+<canvas id="particleCanvas"></canvas>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<section class="hero" id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-fog"></div>
+  <div class="hero-vignette"></div>
+
+  <div class="hero-content">
+    <p class="hero-eyebrow" id="heroEyebrow">Shetonde's Collection</p>
+    <h1 class="hero-title" id="heroTitle">
+      WALL OF<br><span class="elegant starlight-text">Colognes</span>
+    </h1>
+    <div class="hero-rule" id="heroRule"></div>
+    <p class="hero-sub" id="heroSub">
+      A living catalog of every cologne I've tried, rated, and lived in.<br>
+      Every bottle has a story. Every spritz, a memory.
+    </p>
+  </div>
+
+  <div class="hero-scroll" id="heroScroll" onclick="document.getElementById('collection').scrollIntoView({behavior:'smooth'})">
+    <span>Explore</span>
+    <div class="hero-scroll-line"></div>
+  </div>
+</section>
+
+<!-- ═══════════════ STATS ═══════════════ -->
+<section class="stats-section reveal">
+  <div class="stats-bar" id="statsBar"></div>
+</section>
+
+<!-- ═══════════════ COLLECTION ═══════════════ -->
+<div class="section-divider reveal">
+  <div class="line"></div>
+  <div class="diamond"></div>
+  <div class="line"></div>
+</div>
+
+<section id="collection">
+  <div class="collection-header reveal">
+    <h2 class="starlight-text">The Collection</h2>
+    <p>Click any card to explore in detail</p>
+  </div>
+
+  <!-- Filter Bar -->
+  <div class="filter-bar reveal" id="filterBar">
+    <span class="filter-label">Filter</span>
+    <div class="filter-pills" id="typePills">
+      <button class="pill-btn on" data-type="all">All</button>
+      <button class="pill-btn" data-type="EDT">EDT</button>
+      <button class="pill-btn" data-type="EDP">EDP</button>
+      <button class="pill-btn" data-type="Parfum" title="Extrait / Pure Parfum">Parfum</button>
+      <button class="pill-btn" data-type="Other" title="EDC · Eau Fraiche · Attar">Other</button>
+    </div>
+    <div class="filter-sep"></div>
+    <div class="search-box">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input type="text" id="searchInput" placeholder="Search by name or brand...">
+    </div>
+    <div class="filter-sep"></div>
+    <span class="filter-label">Sort</span>
+    <select class="filter-sort" id="sortSel">
+      <option value="default">Default</option>
+      <option value="savings">Best Savings %</option>
+      <option value="rating">Highest Rated</option>
+      <option value="paid_asc">Price ↑</option>
+      <option value="paid_desc">Price ↓</option>
+      <option value="brand">Brand A–Z</option>
+    </select>
+    <span class="filter-count" id="fct"></span>
+  </div>
+
+  <!-- Grid -->
+  <div class="grid" id="grid"></div>
+</section>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer class="reveal">
+  <div class="footer-line"></div>
+  <p>MSRP values marked ~ are approximate market prices</p>
+  <p>Curated by <span class="name">Shetonde</span> &nbsp;·&nbsp; 2026</p>
+</footer>
+
+<!-- ═══════════════ DETAIL MODAL ═══════════════ -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal-content" id="modalContent">
+    <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    <div id="modalInner"></div>
+  </div>
+</div>
+
+<script>
+// ╔══════════════════════════════════════════════════════════════════════════╗
+// ║  ✏️  YOUR COLOGNE COLLECTION                                             ║
+// ╚══════════════════════════════════════════════════════════════════════════╝
+
+const DATA = [
+  {
+    brand:"Racing Club", name:"Red", type:"EDT", size:"3.4 oz",
+    paid:5, msrp:18, rating:3,
+    review:"Smells decent for $5. Wouldn't wear it out but fine at home.",
+    img:"https://i.imgur.com/NtCIhsK.jpeg", badge:{l:"Budget Find",c:"b-budget"}, special:null,
+    color:"#c0392b", grad:"rgba(192,57,43,.28),rgba(0,0,0,.55)",
+    accords:[]
+  },
+  {
+    brand:"Racing Club", name:"Blue", type:"EDT", size:"3.4 oz",
+    paid:5, msrp:18, rating:3,
+    review:"Aquatic, light, totally inoffensive. Dollar-per-wear is unbeatable.",
+    img:"https://i.imgur.com/6zzbPJO.jpeg", badge:{l:"Budget Find",c:"b-budget"}, special:null,
+    color:"#2980b9", grad:"rgba(41,128,185,.28),rgba(0,0,0,.55)",
+    accords:[]
+  },
+  {
+    brand:"Racing Club", name:"Black", type:"EDT", size:"3.4 oz",
+    paid:5, msrp:18, rating:2,
+    review:"Tries to be dark and broody. Falls flat after about an hour.",
+    img:"https://i.imgur.com/oAtKDMl.jpeg", badge:{l:"Budget Find",c:"b-budget"}, special:null,
+    color:"#8e9eab", grad:"rgba(55,60,80,.45),rgba(0,0,0,.6)",
+    accords:[]
+  },
+  {
+    brand:"Le Grande", name:"White", type:"EDT", size:"3.4 oz",
+    paid:5, msrp:18, rating:2.5,
+    review:"Clean and fresh. Fine for the price but nothing memorable.",
+    img:"https://i.imgur.com/6qBrtev.jpeg", badge:{l:"Budget Find",c:"b-budget"}, special:null,
+    color:"#c8d3da", grad:"rgba(190,200,210,.15),rgba(0,0,0,.55)",
+    accords:[]
+  },
+  {
+    brand:"Family Dollar", name:"Scentfull Gold Dust", type:"Body Mist", size:"3.7 oz",
+    paid:3.40, msrp:8, rating:1,
+    review:"Not even a cologne. A body mist. From Family Dollar. What was I thinking.",
+    img:"https://i.imgur.com/fUxA4Yc.jpeg", badge:{l:"🚫 Avoid",c:"b-regret"}, special:"disaster",
+    color:"#ef4444", grad:"rgba(239,68,68,.2),rgba(60,0,0,.7)",
+    accords:[]
+  },
+  {
+    brand:"Family Dollar", name:"Cherry Rebel", type:"Body Spray", size:"Unknown",
+    paid:3.99, msrp:8, rating:1,
+    review:"Smelled like a gas station air freshener. The name was the best thing about it.",
+    img:"https://i.imgur.com/jsXuAq2.jpeg", badge:{l:"🚫 Avoid",c:"b-regret"}, special:"disaster",
+    color:"#ef4444", grad:"rgba(239,68,68,.2),rgba(60,0,0,.7)",
+    accords:[]
+  },
+  {
+    brand:"Jimmy Choo", name:"Man Blue", type:"EDT", size:"Standard",
+    paid:52, msrp:75, rating:4,
+    review:"Great summer fragrance. Light, citrusy, crowd-pleasing. Solid buy.",
+    img:"https://i.imgur.com/x60mN12.jpeg", badge:null, special:null,
+    color:"#2471a3", grad:"rgba(36,113,163,.28),rgba(0,0,0,.52)",
+    accords:[
+      {n:'Aromatic', w:100, c:'white', bg:'#1e8449'},
+      {n:'Vanilla', w:85, c:'black', bg:'#fad7a1'},
+      {n:'Fresh Spicy', w:70, c:'black', bg:'#d5d8dc'},
+      {n:'Woody', w:60, c:'white', bg:'#5c3a21'},
+      {n:'Lavender', w:50, c:'white', bg:'#8e44ad'}
+    ]
+  },
+  {
+    brand:"Mahajan", name:"Desperado (Original)", type:"EDP", size:"Standard",
+    paid:54, msrp:80, rating:4,
+    review:"Unique and bold. Gets compliments. Worth every dollar.",
+    img:"https://i.imgur.com/Lf83HzB.jpeg", badge:null, special:null,
+    color:"#884ea0", grad:"rgba(136,78,160,.28),rgba(0,0,0,.52)",
+    accords:[]
+  },
+  {
+    brand:"Generic / Niche", name:"Exotic Amber", type:"EDP", size:"Standard",
+    paid:30, msrp:45, rating:3.5,
+    review:"Warm amber base, nice longevity. A bit generic but pleasant.",
+    img:"https://i.imgur.com/KaaX8pe.png", badge:null, special:null,
+    color:"#d35400", grad:"rgba(211,84,0,.28),rgba(0,0,0,.52)",
+    accords:[]
+  },
+  {
+    brand:"Rue Broca", name:"Exotic Heritage", type:"EDP", size:"Standard",
+    paid:25, msrp:35, rating:5,
+    review:"My football teammates used to BEG me to wear this after practice. Undeniable. No debate.",
+    img:"https://i.imgur.com/yLlW7UF.jpeg", badge:null, special:null,
+    color:"#a04000", grad:"rgba(160,64,0,.28),rgba(0,0,0,.52)",
+    accords:[
+      {n:'Woody', w:100, c:'white', bg:'#8B5A2B'},
+      {n:'Sweet', w:85, c:'white', bg:'#D87093'},
+      {n:'Fruity', w:75, c:'white', bg:'#FF6347'},
+      {n:'Earthy', w:60, c:'white', bg:'#556B2F'},
+      {n:'Musky', w:50, c:'white', bg:'#9A8B9C'},
+      {n:'Powdery', w:40, c:'black', bg:'#D3D3D3'}
+    ]
+  },
+  {
+    brand:"Jean Paul Gaultier", name:"Le Male Elixir Absolu", type:"EDP", size:"6.8 oz",
+    paid:35, msrp:175, rating:5,
+    review:"The crown jewel. Heavy, seductive, beast-mode longevity. $35 for this is criminal.",
+    img:"https://i.imgur.com/EtMOD1y.jpeg", badge:{l:"💎 Hookup Deal",c:"b-hookup"}, special:null,
+    color:"#c9a84c", grad:"rgba(15,20,60,.7),rgba(201,168,76,.22)",
+    accords:[
+      {n:'Vanilla', w:100, c:'black', bg:'#fad7a1'},
+      {n:'Sweet', w:85, c:'black', bg:'#ff9ebb'},
+      {n:'Honey', w:75, c:'black', bg:'#f39c12'},
+      {n:'Tobacco', w:60, c:'white', bg:'#5c3a21'},
+      {n:'Warm Spicy', w:50, c:'white', bg:'#a83232'}
+    ]
+  },
+  {
+    brand:"Afnan", name:"9 PM Elixir", type:"EDP", size:"Standard",
+    paid:35, msrp:55, rating:4,
+    review:"Dark, sweet, smoky. Perfect for nights out. Excellent value.",
+    img:"https://i.imgur.com/hUwWxhj.png", badge:null, special:null,
+    color:"#6c5ce7", grad:"rgba(40,30,80,.5),rgba(108,92,231,.2)",
+    accords:[
+      {n:'Vanilla', w:100, c:'black', bg:'#fad7a1'},
+      {n:'Sweet', w:85, c:'black', bg:'#ff9ebb'},
+      {n:'Warm Spicy', w:75, c:'white', bg:'#a83232'},
+      {n:'Fruity', w:60, c:'white', bg:'#d94848'},
+      {n:'Amber', w:50, c:'black', bg:'#e67e22'}
+    ]
+  },
+  {
+    brand:"Lattafa", name:"Asad Bourbon", type:"EDP", size:"Standard",
+    paid:51, msrp:60, rating:3,
+    review:"Smells like expensive whiskey on skin. Nice, but not $51 nice. Felt burned.",
+    img:"https://i.imgur.com/dbCK9Ps.jpeg", badge:{l:"😤 Felt Scammed",c:"b-scam"}, special:null,
+    color:"#784212", grad:"rgba(120,66,18,.38),rgba(0,0,0,.52)",
+    accords:[
+      {n:'Vanilla', w:100, c:'black', bg:'#fad7a1'},
+      {n:'Warm Spicy', w:85, c:'white', bg:'#a83232'},
+      {n:'Sweet', w:70, c:'black', bg:'#ff9ebb'},
+      {n:'Amber', w:55, c:'black', bg:'#e67e22'},
+      {n:'Woody', w:40, c:'white', bg:'#5c3a21'}
+    ]
+  },
+  {
+    brand:"Lattafa", name:"Layali Rouge", type:"EDP", size:"Travel Mini",
+    paid:10, msrp:22, rating:4,
+    review:"Rich, rosy, and sweet. The travel size goes a long way. Absolute steal.",
+    img:"https://i.imgur.com/2ubU8so.jpeg", badge:{l:"🔥 Steal",c:"b-steal"}, special:null,
+    color:"#c0392b", grad:"rgba(192,57,43,.25),rgba(0,0,0,.52)",
+    accords:[]
+  },
+  {
+    brand:"Creed", name:"Aventus Refill", type:"EDP", size:"10 ml",
+    paid:10, msrp:50, rating:4.5,
+    review:"Overhyped going in — but at $10 it earned its place. The birch smoke and pineapple are real.",
+    img:"https://i.imgur.com/iuT5ghj.jpeg", badge:{l:"🔥 Steal",c:"b-steal"}, special:null,
+    color:"#1e8449", grad:"rgba(30,132,73,.28),rgba(0,0,0,.52)",
+    accords:[
+      {n:'Fruity', w:100, c:'black', bg:'#f4d03f'},
+      {n:'Sweet', w:85, c:'black', bg:'#ff9ebb'},
+      {n:'Leather', w:70, c:'white', bg:'#212f3d'},
+      {n:'Smoky', w:60, c:'white', bg:'#7b7d7d'},
+      {n:'Woody', w:50, c:'white', bg:'#5c3a21'}
+    ]
+  },
+  {
+    brand:"Lattafa", name:"Asad Elixir", type:"EDP", size:"3.4 oz",
+    paid:35, msrp:50, rating:5,
+    review:"If you like Asad bourbon, you'll love this one. It's more amber and woody. It smells amazing.",
+    img:"https://i.imgur.com/MkcR9dg.jpeg", badge:null, special:null,
+    color:"#1c1c1c", grad:"rgba(28,28,28,.4),rgba(0,0,0,.7)",
+    accords:[
+      {n:'Amber', w:100, c:'black', bg:'#CC6633'},
+      {n:'Woody', w:90, c:'white', bg:'#6B4226'},
+      {n:'Tobacco', w:80, c:'white', bg:'#997A3D'},
+      {n:'Vanilla', w:70, c:'black', bg:'#C3C3A2'},
+      {n:'Sweet', w:60, c:'white', bg:'#A54040'},
+      {n:'Warm Spicy', w:55, c:'white', bg:'#8B3A3A'}
+    ]
+  },
+  {
+    brand:"Lattafa", name:"Habik for Men", type:"EDP", size:"3.4 oz",
+    paid:35, msrp:50, rating:5,
+    review:"Very cool design; it heats you with spice, very warm spice.",
+    img:"https://i.imgur.com/uxNae7r.jpeg", badge:null, special:null,
+    color:"#5b2c6f", grad:"rgba(91,44,111,.4),rgba(0,0,0,.7)",
+    accords:[
+      {n:'Warm Spicy', w:100, c:'white', bg:'#C04020'},
+      {n:'Aromatic', w:80, c:'black', bg:'#5F9EA0'},
+      {n:'Fresh Spicy', w:70, c:'black', bg:'#8FBC8F'},
+      {n:'Woody', w:60, c:'white', bg:'#6B4226'},
+      {n:'Lavender', w:50, c:'white', bg:'#6A5ACD'},
+      {n:'Amber', w:45, c:'white', bg:'#B87333'}
+    ]
+  }
+]; 
+
+// ══════════════════════════════════════════════════════════════
+//  ENGINE — no need to edit below
+// ══════════════════════════════════════════════════════════════
+
+// ── PARTICLE SYSTEM (Starfield/Nebula) ──
+const canvas=document.getElementById('particleCanvas');
+const ctx=canvas.getContext('2d');
+let particles=[],W,H;
+function resizeCanvas(){
+  W=canvas.width=window.innerWidth;
+  H=canvas.height=window.innerHeight;
+}
+window.addEventListener('resize',resizeCanvas);
+resizeCanvas();
+
+class Particle{
+  constructor(){this.reset();}
+  reset(){
+    this.x=Math.random()*W;
+    this.y=Math.random()*H;
+    this.size=Math.random()*1.2+0.2;
+    this.speedX=(Math.random()-0.5)*0.15;
+    this.speedY=(Math.random()-0.5)*0.15;
+    this.opacity=Math.random()*0.5+0.1;
+    // Cool whites, icy blues, subtle silvers
+    this.hue=Math.random()>0.5?210:240; 
+    this.sat=Math.random()*20 + 80;
+    this.lit=Math.random()*20 + 80;
+    this.life=0;
+    this.maxLife=Math.random()*800+400;
+  }
+  update(){
+    this.x+=this.speedX; this.y+=this.speedY; this.life++;
+    if(this.life>this.maxLife||this.x<0||this.x>W||this.y<0||this.y>H)this.reset();
+  }
+  draw(){
+    const fade=this.life<50?this.life/50:this.life>this.maxLife-50?(this.maxLife-this.life)/50:1;
+    ctx.beginPath();
+    ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
+    ctx.fillStyle=`hsla(${this.hue},${this.sat}%,${this.lit}%,${this.opacity*fade})`;
+    ctx.fill();
+  }
+}
+
+for(let i=0;i<100;i++)particles.push(new Particle());
+
+function animateParticles(){
+  ctx.clearRect(0,0,W,H);
+  particles.forEach(p=>{p.update();p.draw()});
+  // Draw subtle constellation connections
+  for(let i=0;i<particles.length;i++){
+    for(let j=i+1;j<particles.length;j++){
+      const dx=particles[i].x-particles[j].x;
+      const dy=particles[i].y-particles[j].y;
+      const dist=Math.sqrt(dx*dx+dy*dy);
+      if(dist<90){
+        ctx.beginPath();
+        ctx.moveTo(particles[i].x,particles[i].y);
+        ctx.lineTo(particles[j].x,particles[j].y);
+        ctx.strokeStyle=`hsla(210, 50%, 80%, ${0.03*(1-dist/90)})`;
+        ctx.lineWidth=0.5;
+        ctx.stroke();
+      }
+    }
+  }
+  requestAnimationFrame(animateParticles);
+}
+animateParticles();
+
+// ── CUSTOM CURSOR ──
+const cursorDot=document.getElementById('cursorDot');
+const cursorRing=document.getElementById('cursorRing');
+let mouseX=0,mouseY=0,ringX=0,ringY=0;
+
+document.addEventListener('mousemove',e=>{
+  mouseX=e.clientX;mouseY=e.clientY;
+  cursorDot.style.left=mouseX+'px';
+  cursorDot.style.top=mouseY+'px';
+});
+
+function animateCursor(){
+  ringX+=(mouseX-ringX)*0.15;
+  ringY+=(mouseY-ringY)*0.15;
+  cursorRing.style.left=ringX+'px';
+  cursorRing.style.top=ringY+'px';
+  requestAnimationFrame(animateCursor);
+}
+animateCursor();
+
+document.querySelectorAll('button,a,.card,.modal-close').forEach(el=>{
+  el.addEventListener('mouseenter',()=>cursorRing.classList.add('hovered'));
+  el.addEventListener('mouseleave',()=>cursorRing.classList.remove('hovered'));
+});
+
+// ── HERO ENTRANCE ANIMATION ──
+function heroEntrance(){
+  const tl=[
+    {el:document.getElementById('heroEyebrow'),delay:300},
+    {el:document.getElementById('heroTitle'),delay:600},
+    {el:document.getElementById('heroRule'),delay:1000},
+    {el:document.getElementById('heroSub'),delay:1200},
+    {el:document.getElementById('heroScroll'),delay:1800},
+  ];
+  tl.forEach(item=>{
+    setTimeout(()=>{
+      item.el.style.transition='opacity 1s cubic-bezier(0.4,0,0.2,1),transform 1s cubic-bezier(0.4,0,0.2,1)';
+      item.el.style.opacity='1';
+      item.el.style.transform='translateY(0)';
+    },item.delay);
+  });
+}
+window.addEventListener('load',heroEntrance);
+
+// ── STATS ──
+const totalPaid=DATA.reduce((s,c)=>s+c.paid,0);
+const totalMSRP=DATA.reduce((s,c)=>s+c.msrp,0);
+const statsBar=document.getElementById('statsBar');
+statsBar.innerHTML=`
+  <div class="stat"><div class="stat-value" data-target="${DATA.length}">0</div><div class="stat-label">Bottles</div></div>
+  <div class="stat"><div class="stat-value" data-target="${totalPaid}" data-prefix="$">$0</div><div class="stat-label">Total Paid</div></div>
+  <div class="stat"><div class="stat-value" data-target="${totalMSRP}" data-prefix="~$" data-approx="1">~$0</div><div class="stat-label">Total MSRP</div></div>
+  <div class="stat"><div class="stat-value green starlight-text" data-target="${totalMSRP-totalPaid}" data-prefix="$">$0</div><div class="stat-label">Total Saved</div></div>`;
+
+function animateStats(){
+  const stats=document.querySelectorAll('.stat');
+  stats.forEach((stat,i)=>{
+    setTimeout(()=>{
+      stat.style.transition='opacity 0.6s ease,transform 0.6s ease';
+      stat.style.opacity='1';
+      stat.style.transform='translateY(0)';
+    },i*150);
+  });
+
+  document.querySelectorAll('.stat-value').forEach(el=>{
+    const target=parseFloat(el.dataset.target);
+    const prefix=el.dataset.prefix||'';
+    const duration=1800;
+    const start=performance.now();
+    function update(now){
+      const elapsed=now-start;
+      const progress=Math.min(elapsed/duration,1);
+      const eased=1-Math.pow(1-progress,4);
+      const current=Math.round(target*eased);
+      if(target%1!==0) el.textContent=prefix+current.toFixed(2);
+      else el.textContent=prefix+current;
+      if(progress<1)requestAnimationFrame(update);
+    }
+    requestAnimationFrame(update);
+  });
+}
+
+const statsObserver=new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      animateStats();
+      statsObserver.disconnect();
+    }
+  });
+},{threshold:0.5});
+statsObserver.observe(statsBar);
+
+// ── UTILITY ──
+function savBadge(paid,msrp){
+  const p=Math.round(((msrp-paid)/msrp)*100);
+  if(paid>=msrp)return{l:"Full Price",c:"s-ne"};
+  if(p>=60)return{l:`${p}% off`,c:"s-gr"};
+  if(p>=25)return{l:`${p}% off`,c:"s-ok"};
+  return{l:`${p}% off`,c:"s-ne"};
+}
+function starsHTML(n){
+  if(!n)return'';
+  let h='<div class="stars">';
+  for(let i=1;i<=5;i++){
+    if(n>=i)h+='<span class="star on">★</span>';
+    else if(n>=i-0.5)h+='<span class="star half">★<span class="hfg">★</span></span>';
+    else h+='<span class="star off">★</span>';
+  }
+  return h+'</div>';
+}
+function bottleSVG(col){
+  return`<svg class="btl" width="72" height="116" viewBox="0 0 68 110" xmlns="http://www.w3.org/2000/svg">
+    <rect x="27" y="4" width="14" height="5" rx="2" fill="${col}" opacity=".95"/>
+    <rect x="22" y="9" width="24" height="4" rx="1.5" fill="${col}" opacity=".75"/>
+    <rect x="28" y="13" width="12" height="8" rx="1" fill="${col}" opacity=".55"/>
+    <path d="M14 22 Q14 20 28 19 L40 19 Q54 20 54 22 L56 28 Q34 25 12 28 Z" fill="${col}" opacity=".4"/>
+    <rect x="12" y="28" width="44" height="74" rx="7" fill="${col}" opacity=".12"/>
+    <rect x="12" y="28" width="44" height="74" rx="7" fill="none" stroke="${col}" stroke-width="1.4" opacity=".65"/>
+    <rect x="16" y="34" width="7" height="28" rx="3.5" fill="white" opacity=".06"/>
+    <rect x="20" y="46" width="28" height="42" rx="3" fill="${col}" opacity=".07"/>
+    <rect x="20" y="46" width="28" height="42" rx="3" fill="none" stroke="${col}" stroke-width=".7" opacity=".3"/>
+  </svg>`;
+}
+
+const CRACK_SVG=`<svg class="crack" viewBox="0 0 220 160" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3">
+  <path d="M68,0 L80,36 L58,44 L85,98 L68,104 L92,160" stroke="rgba(255,70,50,.7)" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+  <path d="M80,36 L106,28 L122,52" stroke="rgba(255,70,50,.45)" stroke-width=".9" fill="none" stroke-linecap="round"/>
+  <path d="M85,98 L110,90 L132,112" stroke="rgba(255,70,50,.4)" stroke-width=".8" fill="none" stroke-linecap="round"/>
+  <path d="M122,52 L140,48" stroke="rgba(255,70,50,.3)" stroke-width=".7" fill="none" stroke-linecap="round"/>
+  <path d="M152,0 L140,32 L158,50 L138,78 L156,160" stroke="rgba(255,70,50,.55)" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+  <path d="M140,32 L118,27" stroke="rgba(255,70,50,.35)" stroke-width=".7" fill="none" stroke-linecap="round"/>
+  <path d="M158,50 L175,58 L168,80" stroke="rgba(255,70,50,.3)" stroke-width=".7" fill="none" stroke-linecap="round"/>
+  <circle cx="80" cy="36" r="2.5" fill="rgba(255,70,50,.35)"/>
+  <circle cx="85" cy="98" r="2" fill="rgba(255,70,50,.3)"/>
+  <circle cx="140" cy="32" r="2" fill="rgba(255,70,50,.3)"/>
+</svg>`;
+
+// ── FILTER TYPE ──
+const PARFUM_TYPES=new Set(['parfum','extrait','pure parfum','extrait de parfum']);
+function typeGroup(t){
+  const l=t.toLowerCase();
+  if(l==='edt')return'EDT';
+  if(l==='edp')return'EDP';
+  if(PARFUM_TYPES.has(l)||(l.includes('parfum')&&l!=='edp'))return'Parfum';
+  return'Other';
+}
+
+// ── RENDER CARD ──
+function makeCard(c){
+  const sv=savBadge(c.paid,c.msrp);
+  const imgInner=c.img
+    ?`<img src="${c.img}" alt="${c.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="bw" style="display:none">${bottleSVG(c.color)}</div>`
+    :`<div class="bw">${bottleSVG(c.color)}</div>`;
+
+  const el=document.createElement('div');
+  el.className='card'+(c.special==='disaster'?' disaster':'');
+  el.style.setProperty('--bcol',c.color+'bb');
+  el.innerHTML=`
+    <div class="card-image" style="background:linear-gradient(135deg,${c.grad})">
+      ${imgInner}
+      ${c.special==='disaster'?CRACK_SVG:''}
+      ${c.badge?`<div class="card-badge ${c.badge.c}">${c.badge.l}</div>`:''}
+    </div>
+    <div class="card-body">
+      <div class="card-brand">${c.brand}</div>
+      <div class="card-name">${c.name}</div>
+      <div class="card-meta">
+        <span class="meta-pill type">${c.type}</span>
+        <span class="meta-pill">${c.size}</span>
+      </div>
+      ${starsHTML(c.rating||0)}
+      ${c.review?`<div class="review">"${c.review}"</div>`:''}
+      <div class="prices">
+        <div class="price-col">
+          <div class="price-label">I Paid</div>
+          <div class="price-value">$${c.paid}</div>
+        </div>
+        <div class="price-col">
+          <span class="save-badge ${sv.c}">${sv.l}</span>
+        </div>
+        <div class="price-col">
+          <div class="price-label">MSRP</div>
+          <div class="price-msrp">~$${c.msrp}</div>
+        </div>
+      </div>
+    </div>`;
+
+  el.addEventListener('click',()=>openModal(c));
+  return el;
+}
+
+// ── DETAIL MODAL & GISCUS LOGIC ──
+let currentCologneName = "";
+let giscusLoaded = false;
+
+function openModal(c){
+  currentCologneName = `${c.brand} - ${c.name}`;
+  giscusLoaded = false;
+
+  const sv=savBadge(c.paid,c.msrp);
+  const imgInner=c.img
+    ?`<img src="${c.img}" alt="${c.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="bw" style="display:none">${bottleSVG(c.color)}</div>`
+    :`<div class="bw">${bottleSVG(c.color)}</div>`;
+
+  const savings=Math.round(((c.msrp-c.paid)/c.msrp)*100);
+  const savingsText=c.paid>=c.msrp?'Paid full price':`Saved ${savings}%`;
+
+  // Build Accords HTML dynamically
+  let accordsHTML = '';
+  if (c.accords && c.accords.length > 0) {
+    accordsHTML = `
+      <div class="main-accords">
+        <div style="font-family:'Outfit',sans-serif;font-size:0.7rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--mu);margin-bottom:0.8rem;">Main Accords</div>
+    `;
+    c.accords.forEach(a => {
+      accordsHTML += `<div class="accord-bar" style="width: ${a.w}%; background-color: ${a.bg}; color: ${a.c};">${a.n}</div>`;
+    });
+    accordsHTML += `</div>`;
+  }
+
+  document.getElementById('modalInner').innerHTML=`
+    <div class="modal-image" style="background:linear-gradient(135deg,${c.grad})">
+      ${imgInner}
+      ${c.badge?`<div class="card-badge ${c.badge.c}" style="top:16px;right:16px;font-size:0.65rem;padding:0.3rem 0.8rem;">${c.badge.l}</div>`:''}
+    </div>
+    <div class="modal-body">
+      <div class="modal-brand">${c.brand}</div>
+      <div class="modal-name">${c.name}</div>
+      <div class="modal-meta-row">
+        <span class="meta-pill type">${c.type}</span>
+        <span class="meta-pill">${c.size}</span>
+        ${c.rating?'<span class="meta-pill">'+c.rating+' / 5</span>':''}
+      </div>
+      ${c.rating?`<div class="modal-rating">${starsHTML(c.rating)}</div>`:''}
+      
+      ${accordsHTML}
+
+      ${c.review?`<div class="modal-review">"${c.review}"</div>`:''}
+      <div class="modal-prices">
+        <div class="modal-price-col">
+          <div class="modal-price-label">I Paid</div>
+          <div class="modal-price-value">$${c.paid}</div>
+        </div>
+        <div class="modal-price-col">
+          <div class="modal-price-label">Savings</div>
+          <div class="modal-price-value" style="color:${c.paid>=c.msrp?'#94a3b8':'#38bdf8'}">${savingsText}</div>
+        </div>
+        <div class="modal-price-col">
+          <div class="modal-price-label">MSRP</div>
+          <div class="modal-price-msrp">~$${c.msrp}</div>
+        </div>
+      </div>
+      ${c.special==='disaster'?'<div class="modal-special disaster">⚠️ DESIGNATED DISASTER — AVOID AT ALL COSTS</div>':''}
+      
+      <div class="community-section">
+        <div class="comm-divider"><span>Community Thoughts</span></div>
+        <button id="giscusToggleBtn" class="toggle-btn" onclick="toggleGiscus()">View Community Thoughts</button>
+        <div id="giscusWrapper" class="giscus-wrapper">
+          <div id="giscusContainer" class="giscus"></div>
+        </div>
+      </div>
+    </div>`;
+
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeModal(e){
+  if(e.target===e.currentTarget)closeModalDirect();
+}
+function closeModalDirect(){
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModalDirect()});
+
+function toggleGiscus() {
+  const wrapper = document.getElementById('giscusWrapper');
+  const btn = document.getElementById('giscusToggleBtn');
+  
+  if (wrapper.style.display === 'none' || wrapper.style.display === '') {
+    wrapper.style.display = 'block';
+    btn.innerText = "Hide Community Thoughts";
+    if (!giscusLoaded) { loadGiscusScript(); giscusLoaded = true; }
+  } else {
+    wrapper.style.display = 'none';
+    btn.innerText = "View Community Thoughts";
+  }
+}
+
+function loadGiscusScript() {
+  const container = document.getElementById('giscusContainer');
+  container.innerHTML = ''; 
+  const script = document.createElement('script');
+  script.src = "https://giscus.app/client.js";
+  script.setAttribute("data-repo", "christiansheton/christiansheton.github.io");
+  script.setAttribute("data-repo-id", "R_kgDOSHFZ8w");
+  script.setAttribute("data-category", "Comments");
+  script.setAttribute("data-category-id", "DIC_kwDOSHFZ884C_ne0");
+  script.setAttribute("data-mapping", "specific");
+  script.setAttribute("data-term", currentCologneName);
+  script.setAttribute("data-strict", "0");
+  script.setAttribute("data-reactions-enabled", "1");
+  script.setAttribute("data-emit-metadata", "0");
+  script.setAttribute("data-input-position", "bottom");
+  script.setAttribute("data-theme", "preferred_color_scheme");
+  script.setAttribute("data-lang", "en");
+  script.setAttribute("crossorigin", "anonymous");
+  script.async = true;
+  container.appendChild(script);
+}
+
+// ── RENDER GRID ──
+let aType='all',aSort='default',aSearch='';
+
+function render(){
+  let items=[...DATA];
+  if(aType!=='all')items=items.filter(c=>typeGroup(c.type)===aType);
+  if(aSearch){
+    const q=aSearch.toLowerCase();
+    items=items.filter(c=>c.name.toLowerCase().includes(q)||c.brand.toLowerCase().includes(q)||c.type.toLowerCase().includes(q));
+  }
+  const sorts={
+    savings:(a,b)=>((b.msrp-b.paid)/b.msrp)-((a.msrp-a.paid)/a.msrp),
+    rating:(a,b)=>(b.rating||0)-(a.rating||0),
+    paid_asc:(a,b)=>a.paid-b.paid,
+    paid_desc:(a,b)=>b.paid-a.paid,
+    brand:(a,b)=>a.brand.localeCompare(b.brand)
+  };
+  if(sorts[aSort])items.sort(sorts[aSort]);
+
+  document.getElementById('fct').textContent=`${items.length} of ${DATA.length} shown`;
+
+  const grid=document.getElementById('grid');
+  grid.innerHTML='';
+  if(!items.length){grid.innerHTML='<div class="none">No colognes match your search.</div>';return;}
+
+  items.forEach((c,i)=>{
+    const card=makeCard(c);
+    grid.appendChild(card);
+    setTimeout(()=>{card.classList.add('visible');},i*80);
+  });
+}
+
+document.getElementById('typePills').addEventListener('click',e=>{
+  const b=e.target.closest('.pill-btn');if(!b)return;
+  document.querySelectorAll('.pill-btn').forEach(p=>p.classList.remove('on'));
+  b.classList.add('on');
+  aType=b.dataset.type;render();
+});
+
+document.getElementById('sortSel').addEventListener('change',e=>{aSort=e.target.value;render()});
+
+document.getElementById('searchInput').addEventListener('input',e=>{aSearch=e.target.value;render();});
+
+// ── FILTER BAR SCROLL EFFECT ──
+const filterBar=document.getElementById('filterBar');
+let lastScroll=0;
+window.addEventListener('scroll',()=>{
+  const current=window.scrollY;
+  if(current>100)filterBar.classList.add('scrolled');
+  else filterBar.classList.remove('scrolled');
+  lastScroll=current;
+});
+
+// ── SCROLL REVEAL ──
+const revealObserver=new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{if(entry.isIntersecting)entry.target.classList.add('visible');});
+},{threshold:0.1,rootMargin:'0px 0px -50px 0px'});
+
+document.querySelectorAll('.reveal').forEach(el=>revealObserver.observe(el));
+
+// Initial render
+render();
+
+const cardObserver=new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      const card=entry.target;
+      if(!card.classList.contains('visible')){card.classList.add('visible');}
+    }
+  });
+},{threshold:0.05,rootMargin:'0px 0px -30px 0px'});
+
+setTimeout(()=>{
+  document.querySelectorAll('.card').forEach(card=>cardObserver.observe(card));
+},100);
+</script>
+</body>
+</html>
